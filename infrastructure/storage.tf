@@ -3,8 +3,6 @@ resource "aws_dynamodb_table" "url-shortener-mappings" {
     billing_mode    = "PAY_PER_REQUEST"
     hash_key        = "ShortURL"
     range_key       = "LongURL"
-    read_capacity   = 20
-    write_capacity  = 20
 
     attribute {
         name = "ShortURL"
@@ -22,5 +20,17 @@ resource "aws_dynamodb_table" "url-shortener-mappings" {
 
     server_side_encryption {
         enabled = false
+    }
+}
+
+resource "aws_s3_bucket_website_configuration" "url-shortener-website" {
+    bucket = "url-shortener-website-bucket"
+
+    index_document {
+        suffix = "index.html"
+    }
+
+    error_document {
+        key = "404.html"
     }
 }
