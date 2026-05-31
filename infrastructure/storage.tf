@@ -2,7 +2,6 @@ resource "aws_dynamodb_table" "url-shortener-mappings" {
     name            = "URLMappings"
     billing_mode    = "PAY_PER_REQUEST"
     hash_key        = "ShortURL"
-    range_key       = "LongURL"
 
     attribute {
         name = "ShortURL"
@@ -21,10 +20,19 @@ resource "aws_dynamodb_table" "url-shortener-mappings" {
     server_side_encryption {
         enabled = false
     }
+
+    tags = {
+        Environment = "production"
+        Project     = "URL-Shortener"
+    }
 }
 
-resource "aws_s3_bucket_website_configuration" "url-shortener-website" {
-    bucket = "url-shortener-website-bucket"
+resource "aws_s3_bucket" "url-shortener-frontend" {
+    bucket = var.frontend_bucket_name
+}
+
+resource "aws_s3_bucket_website_configuration" "url-shortener-frontend" {
+    bucket = aws_s3_bucket.url-shortener-frontend.id
 
     index_document {
         suffix = "index.html"
@@ -33,4 +41,30 @@ resource "aws_s3_bucket_website_configuration" "url-shortener-website" {
     error_document {
         key = "404.html"
     }
+}
+
+resource "aws_s3_bucket_public_access_block" "url-shortener-frontend" {
+    bucket = aws_s3_bucket.url-shortener-frontend.id
+
+    block_public_acls       = false
+    block_public_policy     = false
+    ignore_public_acls      = false
+    restrict_public_buckets = false
+}
+
+resource "aws_s3_bucket_policy" "url-shortener-frontend" {
+    bucket = aws_s3_bucket.url-shortener-frontend.id
+
+    policy = jsonencode({
+        Version = "2012-10-17"
+        Statement = [
+            {
+                Sid = "PublicReadGetObject"
+                Effect = "Allow"
+                Principal = "*"
+                Action = "s3:GetObject"
+                Resource = "${aws_s3_bucket.url-shortener-frontend.arn}/*"
+            }
+        ]
+    })
 }
