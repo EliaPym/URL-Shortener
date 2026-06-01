@@ -8,11 +8,6 @@ resource "aws_dynamodb_table" "url-shortener-mappings" {
         type = "S"
     }
 
-    attribute {
-        name = "LongURL"
-        type = "S"
-    }
-
     ttl {
         enabled = false
     }
