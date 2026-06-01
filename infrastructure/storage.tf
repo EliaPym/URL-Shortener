@@ -27,8 +27,11 @@ resource "aws_dynamodb_table" "url-shortener-mappings" {
     }
 }
 
+resource "random_uuid" "bucket_suffix" {
+}
+
 resource "aws_s3_bucket" "url-shortener-frontend" {
-    bucket = var.frontend_bucket_name
+    bucket = "url-shortener-frontend-${random_uuid.bucket_suffix.result}"
 }
 
 resource "aws_s3_bucket_website_configuration" "url-shortener-frontend" {
