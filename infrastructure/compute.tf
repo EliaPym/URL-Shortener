@@ -25,3 +25,25 @@ data "archive_file" "lambda_zip" {
     source_dir = "${path.module}/../backend"
     output_path = "${path.module}/lambda_payload.zip"
 }
+
+resource "aws_lambda_function" "url_shortener_lambda" {
+    filename         = data.archive_file.lambda_zip.output_path
+    source_code_hash = data.archive_file.lambda_zip.output_base64sha256
+    function_name    = "url-shortener-backend"
+    role             = aws_iam_role.lambda_exec_role.arn
+    
+    handler          = "lambda_function.handler"
+    runtime          = "python3.11"
+
+
+    environment {
+        variables = {
+            DYNAMODB_TABLE = aws_dynamodb_table.url-shortener-mappings.name
+        }
+    }
+
+    tags = {
+        Environment = "Production"
+        Project = "URL-Shortener"
+    }
+}
