@@ -1,5 +1,5 @@
 resource "aws_iam_role" "lambda_exec_role" {
-    name = "url-shortener-lambda-role"
+    name = "url_shortener_lambda_role"
 
     assume_role_policy = jsonencode({
         Version = "2012-10-17"
@@ -29,7 +29,7 @@ data "archive_file" "lambda_zip" {
 resource "aws_lambda_function" "url_shortener_lambda" {
     filename         = data.archive_file.lambda_zip.output_path
     source_code_hash = data.archive_file.lambda_zip.output_base64sha256
-    function_name    = "url-shortener-backend"
+    function_name    = "url_shortener_backend"
     role             = aws_iam_role.lambda_exec_role.arn
     
     handler          = "lambda_function.handler"
@@ -38,12 +38,12 @@ resource "aws_lambda_function" "url_shortener_lambda" {
 
     environment {
         variables = {
-            DYNAMODB_TABLE = aws_dynamodb_table.url-shortener-mappings.name
+            DYNAMODB_TABLE = aws_dynamodb_table.url_shortener_mappings.name
         }
     }
 
     tags = {
         Environment = "Production"
-        Project = "URL-Shortener"
+        Project = var.project_name
     }
 }
