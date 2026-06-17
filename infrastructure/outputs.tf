@@ -1,6 +1,6 @@
 output "api_gateway_endpoint" {
     description = "Public URL of backend"
-    value = aws_apigatewayv2_api.url_shortner_api.api_endpoint
+    value = aws_apigatewayv2_api.url_shortener_api.api_endpoint
 }
 
 output "frontend_s3_bucket_name" {
@@ -9,6 +9,6 @@ output "frontend_s3_bucket_name" {
 }
 
 output "frontend_s3_website_url" {
-    description = "URL of S3 buckte for frontend"
+    description = "URL of S3 bucket for frontend"
     value = aws_s3_bucket_website_configuration.url_shortener_frontend.website_endpoint
 }
