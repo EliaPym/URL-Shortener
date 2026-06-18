@@ -12,3 +12,8 @@ output "frontend_s3_website_url" {
     description = "URL of S3 bucket for frontend"
     value = aws_s3_bucket_website_configuration.url_shortener_frontend.website_endpoint
 }
+
+output "cloudfront_distribution_domain_name" {
+    description = "Domain name of CloudFront distribution"
+    value = aws_cloudfront_distribution.url_shortener_cdn.domain_name
+}
