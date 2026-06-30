@@ -1,6 +1,7 @@
 resource "aws_acm_certificate" "url_shortener_dns" {
     domain_name = var.main_url
     validation_method = "DNS"
+    provider = aws.us_east_1
 }
 
 data "aws_route53_zone" "url_shortener_dns" {

@@ -7,9 +7,10 @@ resource "aws_cloudfront_distribution" "url_shortener_cdn" {
     enabled = true
     is_ipv6_enabled = true
     default_root_object = "index.html"
+    aliases = [var.main_url, "www.${var.main_url}"]
 
     origin {
-        domain_name = aws_s3_bucket_website_configuration.frontend_hosting.website_endpoint
+        domain_name = aws_s3_bucket_website_configuration.url_shortener_frontend.website_endpoint
         origin_id = local.s3_origin_id
 
         custom_origin_config {
@@ -66,5 +67,8 @@ resource "aws_cloudfront_distribution" "url_shortener_cdn" {
 
     viewer_certificate {
         cloudfront_default_certificate = true
+        acm_certificate_arn = aws_acm_certificate.url_shortener_dns.arn
+        ssl_support_method = "sni-only"
+        minimum_protocol_version = "TLSv1.2_2021"
     }
 }

@@ -1,3 +1,19 @@
+resource "aws_apigatewayv2_domain_name" "short_link_domain" {
+    domain_name = var.short_url
+
+    domain_name_configuration {
+        certificate_arn = aws_acm_certificate.url_shortener_dns.arn
+        endpoint_type = "REGIONAL"
+        security_policy = "TLS_1_2"
+    }
+}
+
+resource "aws_apigatewayv2_api_mapping" "short_link_mapping" {
+    api_id = aws_apigatewayv2_api.url_shortener_api.id
+    domain_name = aws_apigatewayv2_domain_name.short_link_domain.id
+    stage = aws_apigatewayv2_stage.default_stage.id
+}
+
 resource "aws_apigatewayv2_api" "url_shortener_api" {
     name = "url_shortener_api"
     protocol_type = "HTTP"
