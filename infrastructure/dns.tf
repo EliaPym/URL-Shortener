@@ -4,9 +4,8 @@ resource "aws_acm_certificate" "url_shortener_dns" {
     provider = aws.us_east_1
 }
 
-data "aws_route53_zone" "url_shortener_dns" {
+resource "aws_route53_zone" "url_shortener_dns" {
     name = var.main_url
-    private_zone = false
 }
 
 resource "aws_route53_record" "url_shortener_dns" {
@@ -23,7 +22,7 @@ resource "aws_route53_record" "url_shortener_dns" {
     records = [each.value.record]
     ttl = 60
     type = each.value.type
-    zone_id = data.aws_route53_zone.url_shortener_dns.zone_id
+    zone_id = aws_route53_zone.url_shortener_dns.zone_id
 }
 
 resource "aws_acm_certificate_validation" "url_shortener_dns" {
