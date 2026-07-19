@@ -1,19 +1,19 @@
 variable "aws_region" {
-    default = "eu-west-2"
+  default = "eu-west-2"
 }
 
 variable "project_name" {
-    default = "URL_Shortener_Project"
+  default = "URL_Shortener_Project"
 }
 
 variable "main_url" {
-    default = "i-linked.org"
+  default = "i-linked.org"
 }
 
 variable "short_url" {
-    default = "i-l.ink"
+  default = "i-l.ink"
 }
 
 variable "api_url" {
-    default = "api.i-l.ink"
+  default = "api.i-l.ink"
 }
