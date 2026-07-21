@@ -21,6 +21,18 @@ resource "aws_cloudfront_distribution" "url_shortener_cdn" {
     }
   }
 
+  origin {
+    domain_name = replace(aws_apigatewayv2_api.url_shortener_api.api_endpoint, "/^https?://([^/]*).*/", "$1")
+    origin_id = local.api_origin_id
+
+    custom_origin_config {
+      http_port              = 80
+      https_port             = 443
+      origin_protocol_policy = "https-only"
+      origin_ssl_protocols   = ["TLSv1.2"]
+    }
+  }
+
   default_cache_behavior {
     allowed_methods  = ["GET", "HEAD"]
     cached_methods   = ["GET", "HEAD"]
@@ -66,8 +78,8 @@ resource "aws_cloudfront_distribution" "url_shortener_cdn" {
   }
 
   viewer_certificate {
-    cloudfront_default_certificate = true
-    acm_certificate_arn            = aws_acm_certificate.url_shortener_dns.arn
+    cloudfront_default_certificate = false
+    acm_certificate_arn            = aws_acm_certificate_validation.url_shortener_dns.certificate_arn
     ssl_support_method             = "sni-only"
     minimum_protocol_version       = "TLSv1.2_2021"
   }

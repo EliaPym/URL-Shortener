@@ -65,4 +65,6 @@ resource "aws_s3_bucket_policy" "url_shortener_frontend" {
       }
     ]
   })
+
+  depends_on = [aws_s3_bucket_public_access_block.url_shortener_frontend]
 }
