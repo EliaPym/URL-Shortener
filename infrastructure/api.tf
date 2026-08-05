@@ -2,7 +2,7 @@ resource "aws_apigatewayv2_domain_name" "short_link_domain" {
   domain_name = var.short_url
 
   domain_name_configuration {
-    certificate_arn = aws_acm_certificate_validation.url_shortener_dns.certificate_arn
+    certificate_arn = aws_acm_certificate_validation.api_shortener_dns.certificate_arn
     endpoint_type   = "REGIONAL"
     security_policy = "TLS_1_2"
   }
