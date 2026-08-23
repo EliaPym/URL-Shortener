@@ -47,3 +47,23 @@ resource "aws_lambda_function" "url_shortener_lambda" {
     Project     = var.project_name
   }
 }
+
+resource "aws_iam_role_policy" "lambda_dynamodb_policy" {
+  name = "lambda_dynamodb_policy"
+  role = aws_iam_role.lambda_exec_role.id
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Action = [
+          "dynamodb:GetItem",
+          "dynamodb:PutItem",
+          "dynamodb:Scan",
+        ]
+        Effect   = "Allow"
+        Resource = aws_dynamodb_table.url_shortener_mappings.arn
+      }
+    ]
+  })
+}

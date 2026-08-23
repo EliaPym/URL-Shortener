@@ -65,3 +65,15 @@ resource "aws_acm_certificate_validation" "api_shortener_dns" {
   certificate_arn         = aws_acm_certificate.api_shortener_dns.arn
   validation_record_fqdns = [for record in aws_route53_record.api_shortener_dns : record.fqdn]
 }
+
+resource "aws_route53_record" "api_shortener_redirect" {
+  name    = var.short_url
+  type    = "A"
+  zone_id = aws_route53_zone.api_shortener_dns.zone_id
+
+  alias {
+    name                   = aws_apigatewayv2_domain_name.short_link_domain.domain_name_configuration[0].target_domain_name
+    zone_id                = aws_apigatewayv2_domain_name.short_link_domain.domain_name_configuration[0].hosted_zone_id
+    evaluate_target_health = false
+  }
+}
