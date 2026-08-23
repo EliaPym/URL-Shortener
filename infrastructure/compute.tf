@@ -22,7 +22,7 @@ resource "aws_iam_role_policy_attachment" "lambda_exec_role_attachment" {
 
 data "archive_file" "lambda_zip" {
   type        = "zip"
-  source_dir  = "${path.module}/../backend"
+  source_dir  = "${path.module}/../backend/build"
   output_path = "${path.module}/lambda_payload.zip"
 }
 
