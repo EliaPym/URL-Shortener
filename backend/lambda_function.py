@@ -8,6 +8,8 @@ from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from mangum import Mangum
 
+short_url: str = "https://i-l.ink/"
+
 app = FastAPI()
 
 app.add_middleware(
@@ -55,7 +57,7 @@ async def shorten_url(request: shortenURLRequest):
         )
         if "Items" in response and response["Items"]:
             short_code = response["Items"][0]["ShortURL"]
-            short_url = f"https://i-l.ink/{short_code}"
+            short_url = f"{short_url}{short_code}"
             return JSONResponse(content={"short_url": short_url}, status_code=200)
             
     except Exception as e:
@@ -68,7 +70,7 @@ async def shorten_url(request: shortenURLRequest):
     
     table.put_item(Item={"ShortURL": short_code, "LongURL": long_url})
     
-    short_url = f"https://i-l.ink/{short_code}"
+    short_url = f"{short_url}{short_code}"
     return JSONResponse(content={"short_url": short_url}, status_code=200)
 
 handler = Mangum(app)
