@@ -152,8 +152,8 @@ Deployment happens in two Terraform passes, because the stack creates its own Ro
    cp lambda_function.py build/
    ```
 
-   > [!NOTE]
-   > Run this inside **WSL** if you're on Windows - MacOS and Linux can run it natively. There are issues with pip not installing the correct Linux binaries on Windows despite declaring `--platform manylinux2014_x86_64` so WSL is recommended.
+> [!NOTE]
+> Run this inside **WSL** if you're on Windows - MacOS and Linux can run it natively. There are issues with pip not installing the correct Linux binaries on Windows despite declaring `--platform manylinux2014_x86_64` so WSL is recommended.
 
 6. Deploy the rest of the stack
 
