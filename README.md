@@ -5,7 +5,7 @@
 ![AWS Lambda](https://img.shields.io/badge/AWS-Lambda-FF9900?logo=awslambda&logoColor=white)
 ![GitHub License](https://img.shields.io/github/license/EliaPym/URL-Shortener)
 
-A basic serverless URL shortener template built on AWS - Lambda, API Gateway, Dynamo, S3, and Cloudfront provisioning - deployed entirely through Terraform.
+A serverless URL shortener template built on AWS - Lambda, API Gateway, DynamoDB, S3, and CloudFront - provisioned entirely through Terraform.
 
 ## Table of Contents
 
@@ -13,6 +13,7 @@ A basic serverless URL shortener template built on AWS - Lambda, API Gateway, Dy
 - [Tech Stack](#tech-stack)
 - [Architecture](#architecture)
 - [Project Structure](#project-structure)
+- [Configuration](#configuration)
 - [Getting Started](#getting-started)
   - [Prerequisites](#prerequisites)
   - [Deployment](#deployment)
@@ -32,7 +33,7 @@ A basic serverless URL shortener template built on AWS - Lambda, API Gateway, Dy
 | **Compute**    | AWS Lambda (Python 3.11)                                                   |
 | **API**        | API Gateway (HTTP API v2)                                                  |
 | **Database**   | DynamoDB (on-demand - `PAY_PER_REQUEST`)                                   |
-| **Edge / DNS** | Cloudfront, Route 53, ACM                                                  |
+| **Edge / DNS** | CloudFront, Route 53, ACM                                                  |
 | **Backend**    | FastAPI + Mangum                                                           |
 | **AWS SDK**    | Boto3 (bundled with Lambda Python 3.11 runtime - not a project dependancy) |
 
@@ -58,9 +59,7 @@ Placeholder
 │   ├── api.tf
 │   ├── edge.tf
 │   ├── dns.tf
-│   ├── outputs.tf
-│   └── .terraform
-│       └── terraform.tfstate
+│   └── outputs.tf
 └── backend/
     ├── lambda_function.py
     ├── requirements.txt
@@ -71,13 +70,13 @@ Placeholder
 
 All project-specific settings are in `./infrastructure/variables.tf`
 
-| Variable       | Purpose                                                      | Default in this repo    |
-|----------------|--------------------------------------------------------------|-------------------------|
-| `aws_region`   | Region for Lambda, DynamoDB, and API Gateway custom domains  | `eu-west-2`             |
-| `project_name` | Applied as a project tag on tagged resources                 | `URL_Shortener_Project` |
-| `main_url`     | "Long" domain - serves the S3/CloudFront frontend            | `i-linked.org`          |
-| `short_url`    | "Short domain - mapped directly to API Gateway for redirects | `i-l.ink`               |
-| `api_url`      | Included as a SAN on the short-domain certificate            | `api.i-l.ink`           |
+| Variable       | Purpose                                                       | Default in this repo    |
+|----------------|---------------------------------------------------------------|-------------------------|
+| `aws_region`   | Region for Lambda, DynamoDB, and API Gateway custom domains   | `eu-west-2`             |
+| `project_name` | Applied as a project tag on tagged resources                  | `URL_Shortener_Project` |
+| `main_url`     | "Long" domain - serves the S3/CloudFront frontend             | `i-linked.org`          |
+| `short_url`    | "Short" domain - mapped directly to API Gateway for redirects | `i-l.ink`               |
+| `api_url`      | Included as a SAN on the short-domain certificate             | `api.i-l.ink`           |
 
 > The repo's default `aws_region` is `eu-west-2` (London). CloudFront and its certificates are always deployed globally in `us-east-1` regardless of this setting. This is an AWS requirement, not something this variable controls.
 
@@ -97,11 +96,6 @@ An **Active AWS Account** and the **AWS CLI v2** configured with credentials tha
 - **Python:** `v3.11.X`
 - **pip:** `v23.0+`
 - **AWS CLI:** `v2.X`
-
-   ```bash
-   aws configure   # or: aws sso login --profile your-profile
-   ```
-
 - **WSL** (*for Windows users only - needed for installation of Linux version of Python libraries*)
 - **Two registered domain names**
   - Main/long domain (e.g. `example-domain.com`)
@@ -115,9 +109,9 @@ Deployment happens in two Terraform passes, because the stack creates its own Ro
 1. Clone the repo and set your AWS credentials
 
    ```bash
-   git clone https://github.com/EliaPym/URL-Shortener.git
-   cd <repo>
-   aws configure
+   git clone https://github.com/EliaPym/URL-Shortener.git URL-Shortener
+   cd ./URL-Shortener
+   aws configure   # or: aws sso login --profile your-profile
    ```
 
 2. Update `./infrastructure/variables.tf` with the following: (see [Configuration](#configuration))
@@ -181,7 +175,8 @@ All routes are served through a single catch-all Lambda integration. FastAPI han
 ### Creating a short link
 
 ```bash
-curl -X POST "https://i-l.ink/Shorten" \                             # Replace with your short domain
+# Replace with your short domain
+curl -X POST "https://i-l.ink/Shorten" \
   -H "Content-Type: application/json" \
   -d '{"long_url": "https://example.com/some/very/long/path"}'
 
@@ -191,7 +186,8 @@ curl -X POST "https://i-l.ink/Shorten" \                             # Replace w
 ### With custom alias
 
 ```bash
-curl -X POST "https://i-l.ink/Shorten" \                             # Replace with your short domain
+# Replace with your short domain
+curl -X POST "https://i-l.ink/Shorten" \
   -H "Content-Type: application/json" \
   -d '{"long_url": "https://example.com", "custom_url": "foobar"}'
 
