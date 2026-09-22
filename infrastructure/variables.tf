@@ -15,5 +15,5 @@ variable "short_url" {
 }
 
 variable "api_url" {
-  default = "api.i-l.ink"
+  default = "api.${short_url}"
 }

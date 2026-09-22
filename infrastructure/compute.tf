@@ -39,6 +39,7 @@ resource "aws_lambda_function" "url_shortener_lambda" {
   environment {
     variables = {
       DYNAMODB_TABLE = aws_dynamodb_table.url_shortener_mappings.name
+      SHORT_URL      = "https://${var.short_url}/"
     }
   }
 

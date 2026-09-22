@@ -41,6 +41,13 @@ resource "aws_s3_bucket_website_configuration" "url_shortener_frontend" {
   }
 }
 
+resource "aws_s3_object" "frontend_config" {
+  bucket       = aws_s3_bucket.url_shortener_frontend.id
+  key          = "config.js"
+  content      = "const API_URL = \"https://${var.api_url}\";"
+  content_type = "text/javascript"
+}
+
 resource "aws_s3_bucket_public_access_block" "url_shortener_frontend" {
   bucket = aws_s3_bucket.url_shortener_frontend.id
 
@@ -67,4 +74,23 @@ resource "aws_s3_bucket_policy" "url_shortener_frontend" {
   })
 
   depends_on = [aws_s3_bucket_public_access_block.url_shortener_frontend]
+}
+
+locals {
+  frontend_dir = "${path.module}/../frontend"
+  mime_types = {
+    html = "text/html"
+    css  = "text/css"
+    js   = "text/javascript"
+  }
+}
+
+resource "aws_s3_object" "frontend_files" {
+  for_each = setsubtract(fileset(local.frontend_dir, "**"), ["config.js"])
+
+  bucket       = aws_s3_bucket.url_shortener_frontend.id
+  key          = each.value
+  source       = "${local.frontend_dir}/${each.value}"
+  etag         = filemd5("${local.frontend_dir}/${each.value}")
+  content_type = lookup(local.mime_types, regex("\\.([^.]*)$", each.value), "application/octet-stream")
 }

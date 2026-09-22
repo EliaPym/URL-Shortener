@@ -1,6 +1,4 @@
 // Change this to match `short_url` in infrastructure/variables.tf
-const API_URL = "https://i-l.ink";
-
 const form = document.getElementById("shorten-form");
 const submitButton = form.querySelector("button[type=submit]");
 const result = document.getElementById("result");
