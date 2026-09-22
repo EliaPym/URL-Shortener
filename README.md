@@ -60,10 +60,14 @@ Placeholder
 │   ├── edge.tf
 │   ├── dns.tf
 │   └── outputs.tf
-└── backend/
-    ├── lambda_function.py
-    ├── requirements.txt
-    └── build/                        # Created during deployment - see below, not committed
+├── backend/
+│   ├── lambda_function.py
+│   ├── requirements.txt
+│   └── build/                        # Created during deployment - see below, not committed
+└── frontend/
+    ├── index.html
+    ├── script.js
+    └── style.css
 ```
 
 ## Configuration
