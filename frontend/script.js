@@ -1,4 +1,3 @@
-// Change this to match `short_url` in infrastructure/variables.tf
 const form = document.getElementById("shorten-form");
 const submitButton = form.querySelector("button[type=submit]");
 const result = document.getElementById("result");
