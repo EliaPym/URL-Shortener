@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>URL Shortener</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="script.js" defer></script>
+</head>
+<body>
+  <main>
+    <h1>URL Shortener</h1>
+
+    <form id="shorten-form">
+      <label for="long-url">Long URL</label>
+      <input type="url" id="long-url" name="long_url" placeholder="https://example.com/some/very/long/path" required>
+
+      <label for="custom-url">Custom alias (optional)</label>
+      <input type="text" id="custom-url" name="custom_url" placeholder="my-link" pattern="[A-Za-z0-9_\-]+" title="Letters, numbers, hyphens and underscores only">
+
+      <button type="submit">Shorten</button>
+    </form>
+
+    <p id="result" hidden>
+      <a id="short-url" href="#" target="_blank" rel="noopener"></a>
+      <button type="button" id="copy-button">Copy</button>
+    </p>
+
+    <p id="error" role="alert" hidden></p>
+  </main>
+</body>
+</html>

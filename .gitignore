@@ -267,3 +267,8 @@ terraform.rc
 # Stop tracking of the backend build directory and zip files
 backend/build/
 *.zip
+
+# Ignore Graphify directory
+graphify-out
+CLAUDE.md
+.claude

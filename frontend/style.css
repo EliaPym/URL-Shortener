@@ -1,0 +1,42 @@
+:root {
+  color-scheme: light dark;
+  font-family: system-ui, sans-serif;
+}
+
+body {
+  margin: 0;
+  padding: 1rem;
+}
+
+main {
+  max-width: 32rem;
+  margin: 4rem auto;
+}
+
+form {
+  display: grid;
+  gap: 0.5rem;
+}
+
+label {
+  font-weight: 600;
+}
+
+input,
+button {
+  font: inherit;
+  padding: 0.5rem;
+}
+
+button[type="submit"] {
+  margin-top: 0.5rem;
+}
+
+#result {
+  margin-top: 1.5rem;
+  overflow-wrap: anywhere;
+}
+
+#error {
+  color: light-dark(#b00020, #ff6b6b);
+}
