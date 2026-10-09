@@ -1,0 +1,36 @@
+name: CI/CD
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  AWS_REGION: eu-west-2
+  PYTHON_VERSION: "3.11"
+  TF_VERSION: "1.16.5"
+  FUNCTION_NAME: url_shortener_backend
+  SMOKE_TEST_URL: https://i-l.ink/_smoke-test
+
+jobs:
+  test:
+    name: Lint & test
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: backend
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+          cache: pip
+          cache-dependency-path: backend/requirements-CI.txt
+      - run: pip install -r requirements-CI.txt
+      - run: ruff check .
+      - run: ruff format --check .
+      - run: python -m pytest -v tests
