@@ -34,3 +34,18 @@ jobs:
       - run: ruff check .
       - run: ruff format --check .
       - run: python -m pytest -v tests
+
+  terraform:
+    name: Check Terraform
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+          working-directory: infrastructure
+    steps:
+      - uses: actions/checkout@v7
+      - uses: hashicorp/setup-terraform@v4
+        with:
+          terraform_version: ${{ env.TF_VERSION }}
+      - run: terraform fmt -check -recursive
+      - run: terraform init -backend=false -input=false
+      - run: terraform validate
